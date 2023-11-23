@@ -1,17 +1,7 @@
-import os
-
-from googleapiclient import discovery
+from src.channel import Mixin
 
 
-API_KEY = os.getenv("YT_API_KEY")
-
-api_service_name = "youtube"
-api_version = "v3"
-
-youtube = discovery.build(api_service_name, api_version, developerKey=API_KEY)
-
-
-class Video:
+class Video(Mixin):
     """Класс для видео из ютуба"""
 
     def __init__(self, video_id: str):
@@ -28,7 +18,7 @@ class Video:
     def get_video_info(self):
         """Получает данные о видео по его id"""
         video_id = self.video_id
-        video_info = youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails', id=video_id).execute()
+        video_info = self.get_service().videos().list(part='snippet,statistics,contentDetails,topicDetails', id=video_id).execute()
         return video_info
 
 
