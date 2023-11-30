@@ -7,13 +7,22 @@ class Video(Mixin):
     def __init__(self, video_id: str):
         """Экземпляр инициализируется id видео"""
         self.video_id = video_id
-        self.video_title = self.get_video_info()['items'][0]['snippet']['title']
-        self.video_url = f"https://youtu.be/{video_id}"
-        self.view_count = int(self.get_video_info()['items'][0]['statistics']['viewCount'])
-        self.like_count = int(self.get_video_info()['items'][0]['statistics']['likeCount'])
+        try:
+            self.title = self.get_video_info()['items'][0]['snippet']['title']
+        except IndexError:
+            print('Неверно указан id видео')
+            self.title = None
+            self.video_url = None
+            self.view_count = None
+            self.like_count = None
+        else:
+            self.title = self.get_video_info()['items'][0]['snippet']['title']
+            self.video_url = f"https://youtu.be/{video_id}"
+            self.view_count = int(self.get_video_info()['items'][0]['statistics']['viewCount'])
+            self.like_count = int(self.get_video_info()['items'][0]['statistics']['likeCount'])
 
     def __str__(self):
-        return f'{self.video_title}'
+        return f'{self.title}'
 
     def get_video_info(self):
         """Получает данные о видео по его id"""
@@ -31,7 +40,7 @@ class PLVideo(Video):
         self.playlist_id = playlist_id
 
     def __str__(self):
-        return f'{self.video_title}'
+        return f'{self.title}'
 
 
 # video1 = Video('AWX4JnAnjBE')  # 'AWX4JnAnjBE' - это id видео из ютуб
